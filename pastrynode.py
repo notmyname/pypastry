@@ -135,6 +135,8 @@ class PastryNode(object):
                 return raw
     
     def _listen_thread(self, listen_location):
+        '''thread target that runs and listens for incoming connections. When new
+           connections are received, spawn a thread and handle it'''
         listen_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         listen_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, True)
         try:
@@ -160,6 +162,7 @@ class PastryNode(object):
         conn.close()
     
     def _process_received_data(self, data, from_addr):
+        '''handles all messages'''
         print 'received data from %s' % `from_addr`
         try:
             message, key = data
