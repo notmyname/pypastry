@@ -169,6 +169,9 @@ class PastryNode(object):
         except ValueError:
             return data
         else:
+            # One eventual goal is to have each of these messages handled as a plugin.
+            # The goal would be to simply add another message by writing a handler and defining
+            # the message payload. In this way, the protocol can be changed or extended vary simply.
             if message == JOIN_MESSAGE:
                 print 'join from %s' % key
                 return 'welcome'
