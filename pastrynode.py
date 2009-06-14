@@ -40,6 +40,7 @@ def get_common_prefix(string1, string2):
 class PastryNode(object):
     def __init__(self, known_host, credentials=None, application=None):
         self.credentials = credentials
+        self.application = application
         
         # the routing table is a list of lists, populated such that each row shares a common prefix
         # with this node's node_id and each column contains the node_id with the
@@ -178,6 +179,8 @@ class PastryNode(object):
             elif message == HEARTBEAT_MESSAGE:
                 # update last heard time for this key
                 return None
+            elif self.application is not None:
+                return self.application.handle_message(message, key, from_addr)
             else:
                 return 'unknown message'
 
