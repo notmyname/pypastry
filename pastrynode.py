@@ -171,7 +171,7 @@ class PastryNode(object):
         else:
             # One eventual goal is to have each of these messages handled as a plugin.
             # The goal would be to simply add another message by writing a handler and defining
-            # the message payload. In this way, the protocol can be changed or extended vary simply.
+            # the message payload. In this way, the protocol can be changed or extended very simply.
             if message == JOIN_MESSAGE:
                 print 'join from %s' % key
                 return 'welcome'
@@ -181,7 +181,7 @@ class PastryNode(object):
             else:
                 return 'unknown message'
 
-def _testing(script_name, hostname=None, host_port=PASTRY_PORT, *extra_args):
+def _testing(script_name, hostname=None, host_port=PASTRY_PORT, *unused_args):
     known_host = None
     if hostname is not None:
         known_host = (hostname, int(host_port))
