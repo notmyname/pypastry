@@ -58,7 +58,7 @@ class PastryNode(object):
         
         # hash the current host's ip address to get the node id
         my_ip = socket.gethostbyname(socket.gethostname())
-        self.node_id = hashlib.sha1(my_ip).digest()
+        self.node_id = hashlib.sha1(my_ip).hexdigest()
         
         # listen on the pastry port
         listen_location = (my_ip, PASTRY_PORT)
@@ -120,7 +120,7 @@ class PastryNode(object):
                 self._send(self._connection_dict[next_host], (message, key))
     
     def _send(self, sock, raw_data):
-        print 'sending %s' % `raw_data`
+        print 'sending %s to %s' % (repr(raw_data), sock.getpeername())
         data = cPickle.dumps(raw_data)
         return sock.sendall(data)
     
@@ -145,6 +145,7 @@ class PastryNode(object):
         except socket.error, err:
             raise ConnectionError, 'Error binding to %s' % `listen_location`
         else:
+            print 'Listening on %s' % repr(listen_location)
             listen_sock.listen(1)
             while True:
                 conn, addr = listen_sock.accept()
@@ -164,7 +165,7 @@ class PastryNode(object):
     
     def _process_received_data(self, data, from_addr):
         '''handles all messages'''
-        print 'received data from %s' % `from_addr`
+        print 'received %s from %s' % (repr(data), repr(from_addr))
         try:
             message, key = data
         except ValueError:
@@ -178,11 +179,13 @@ class PastryNode(object):
                 return 'welcome'
             elif message == HEARTBEAT_MESSAGE:
                 # update last heard time for this key
+                print 'heartbeat from %s' % key
                 return None
             elif self.application is not None:
                 return self.application.handle_message(message, key, from_addr)
             else:
-                return 'unknown message'
+                print 'unknown message'
+                return None
 
 def _testing(script_name, hostname=None, host_port=PASTRY_PORT, *unused_args):
     known_host = None
